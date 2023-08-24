@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  cli:
+    build:
+      context: .
+      dockerfile: ./docker/cli/Dockerfile
+      target: production
+      args:
+        COMPOSER_BASE: base
+    depends_on:
+      - db
+    environment:
+      STAGE: prod
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DB_NAME: test
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
